@@ -1,4 +1,4 @@
-# Ticket4U - Professional Event Ticketing Platform
+# Ticket4U - Event Ticketing Platform
 
 A modern, professional event ticketing system built with PHP, MySQL, and vanilla JavaScript. Inspired by Ticket2U Malaysia but with enhanced UI/UX and features.
 
@@ -269,5 +269,3 @@ This project is for educational/portfolio purposes.
 - Fonts by Google Fonts
 
 ---
-
-**Built with ❤️ for professional event ticketing**
