@@ -1,0 +1,18 @@
+# Ticket4U - Apache Configuration
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Protect sensitive files
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "database.sql">
+    Order allow,deny
+    Deny from all
+</Files>
