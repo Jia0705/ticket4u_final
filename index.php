@@ -4,23 +4,34 @@ $page_description = 'Discover and book tickets for the best concerts, sports, th
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/includes/header.php';
 
+// Get current user ID for wishlist check
+$current_user_id = isLoggedIn() ? getCurrentUser()['id'] : 0;
+
 // Fetch featured events
-$featured_query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon
+$featured_query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon,
+                   (SELECT COUNT(*) FROM wishlists WHERE event_id = e.id AND user_id = ?) as in_wishlist
                    FROM events e
                    JOIN categories c ON e.category_id = c.id
                    WHERE e.status = 'published' AND e.featured = TRUE AND e.event_date >= CURDATE()
                    ORDER BY e.event_date ASC
                    LIMIT 6";
-$featured_events = $conn->query($featured_query);
+$stmt = $conn->prepare($featured_query);
+$stmt->bind_param('i', $current_user_id);
+$stmt->execute();
+$featured_events = $stmt->get_result();
 
 // Fetch upcoming events
-$upcoming_query = "SELECT e.*, c.name as category_name, c.slug as category_slug
+$upcoming_query = "SELECT e.*, c.name as category_name, c.slug as category_slug,
+                   (SELECT COUNT(*) FROM wishlists WHERE event_id = e.id AND user_id = ?) as in_wishlist
                    FROM events e
                    JOIN categories c ON e.category_id = c.id
                    WHERE e.status = 'published' AND e.event_date >= CURDATE()
                    ORDER BY e.event_date ASC
                    LIMIT 8";
-$upcoming_events = $conn->query($upcoming_query);
+$stmt = $conn->prepare($upcoming_query);
+$stmt->bind_param('i', $current_user_id);
+$stmt->execute();
+$upcoming_events = $stmt->get_result();
 
 // Fetch categories
 $categories_query = "SELECT * FROM categories WHERE status = 'active' ORDER BY display_order ASC";
@@ -440,8 +451,10 @@ $stats = $stats_result->fetch_assoc();
                                      alt="<?php echo htmlspecialchars($event['title']); ?>"
                                      onerror="this.src='<?php echo SITE_URL; ?>/assets/images/placeholder-event.jpg'">
                             </a>
-                            <button class="wishlist-btn" data-event-id="<?php echo $event['id']; ?>">
-                                <i class="far fa-heart"></i>
+                            <button class="wishlist-btn<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" 
+                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this)"
+                                    title="<?php echo $event['in_wishlist'] > 0 ? 'Remove from wishlist' : 'Add to wishlist'; ?>">
+                                <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
                             </button>
                             <div class="event-badge">Featured</div>
                         </div>
@@ -513,8 +526,10 @@ $stats = $stats_result->fetch_assoc();
                                      alt="<?php echo htmlspecialchars($event['title']); ?>"
                                      onerror="this.src='<?php echo SITE_URL; ?>/assets/images/placeholder-event.jpg'">
                             </a>
-                            <button class="wishlist-btn" data-event-id="<?php echo $event['id']; ?>">
-                                <i class="far fa-heart"></i>
+                            <button class="wishlist-btn<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" 
+                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this)"
+                                    title="<?php echo $event['in_wishlist'] > 0 ? 'Remove from wishlist' : 'Add to wishlist'; ?>">
+                                <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
                             </button>
                         </div>
                         

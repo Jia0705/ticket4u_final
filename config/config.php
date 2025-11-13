@@ -110,7 +110,7 @@ function getCurrentUser() {
     }
     
     $user_id = (int)$_SESSION['user_id'];
-    $query = "SELECT id, email, full_name, phone, role, profile_image FROM users WHERE id = $user_id AND status = 'active'";
+    $query = "SELECT id, email, name, phone, role, profile_image, password, created_at FROM users WHERE id = $user_id AND status = 'active'";
     $result = $conn->query($query);
     
     return $result && $result->num_rows > 0 ? $result->fetch_assoc() : null;
@@ -137,11 +137,12 @@ function getFlash() {
 
 // Format price
 function formatPrice($amount) {
-    return 'RM ' . number_format($amount, 2);
+    return 'RM ' . number_format($amount ?? 0, 2);
 }
 
 // Format date
 function formatDate($date, $format = 'd M Y') {
+    if (empty($date)) return '';
     return date($format, strtotime($date));
 }
 

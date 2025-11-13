@@ -126,15 +126,15 @@ $flash = getFlash();
                                         <img src="<?php echo SITE_URL; ?>/uploads/profiles/<?php echo htmlspecialchars($current_user['profile_image']); ?>" alt="Profile" class="user-avatar">
                                     <?php else: ?>
                                         <div class="user-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">
-                                            <?php echo strtoupper(substr($current_user['full_name'], 0, 1)); ?>
+                                            <?php echo strtoupper(substr($current_user['name'] ?? 'U', 0, 1)); ?>
                                         </div>
                                     <?php endif; ?>
-                                    <span><?php echo htmlspecialchars($current_user['full_name']); ?></span>
+                                    <span><?php echo htmlspecialchars($current_user['name'] ?? 'User'); ?></span>
                                     <i class="fas fa-chevron-down"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <div class="dropdown-header">
-                                        <strong><?php echo htmlspecialchars($current_user['full_name']); ?></strong>
+                                        <strong><?php echo htmlspecialchars($current_user['name'] ?? 'User'); ?></strong>
                                         <small><?php echo htmlspecialchars($current_user['email']); ?></small>
                                     </div>
                                     <div class="dropdown-divider"></div>
@@ -144,14 +144,14 @@ $flash = getFlash();
                                         </a>
                                         <div class="dropdown-divider"></div>
                                     <?php endif; ?>
-                                    <a href="<?php echo SITE_URL; ?>/profile/dashboard.php" class="dropdown-item">
+                                    <a href="<?php echo SITE_URL; ?>/profile/profile.php" class="dropdown-item">
+                                        <i class="fas fa-user"></i> My Profile
+                                    </a>
+                                    <a href="<?php echo SITE_URL; ?>/profile/bookings.php" class="dropdown-item">
                                         <i class="fas fa-ticket-alt"></i> My Bookings
                                     </a>
-                                    <a href="<?php echo SITE_URL; ?>/profile/profile.php" class="dropdown-item">
-                                        <i class="fas fa-user"></i> Profile Settings
-                                    </a>
                                     <a href="<?php echo SITE_URL; ?>/profile/wishlist.php" class="dropdown-item">
-                                        <i class="fas fa-heart"></i> Wishlist
+                                        <i class="fas fa-heart"></i> My Wishlist
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a href="<?php echo SITE_URL; ?>/auth/logout.php" class="dropdown-item text-danger">

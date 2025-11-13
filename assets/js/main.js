@@ -324,3 +324,88 @@
     });
 
 })(jQuery);
+
+// Wishlist toggle function (global scope for onclick handlers)
+function toggleWishlist(eventId, button) {
+    // Check if user is logged in (button will only show if logged in on some pages)
+    fetch(window.location.origin + '/ticket4u_final/toggle-wishlist.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        credentials: 'same-origin', // Include cookies for session
+        body: 'event_id=' + eventId
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.message || 'Request failed');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Toggle button state
+            const btn = button || document.querySelector(`[onclick*="${eventId}"]`);
+            if (btn) {
+                const icon = btn.querySelector('i');
+                if (data.action === 'added') {
+                    btn.classList.add('active');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.setAttribute('title', 'Remove from wishlist');
+                } else {
+                    btn.classList.remove('active');
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    btn.setAttribute('title', 'Add to wishlist');
+                }
+            }
+            
+            // Show notification
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Wishlist Error:', error);
+        showNotification(error.message || 'An error occurred. Please try again.', 'error');
+    });
+}
+
+// Show notification helper
+function showNotification(message, type) {
+    // Create notification element if it doesn't exist
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideInRight 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        document.body.appendChild(notification);
+    }
+    
+    // Set message and color
+    notification.textContent = message;
+    notification.style.background = type === 'success' 
+        ? 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)'
+        : 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)';
+    notification.style.display = 'block';
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}

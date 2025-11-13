@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Set session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_name'] = $user['full_name'];
+                $_SESSION['user_name'] = $user['name'];
                 $_SESSION['user_role'] = $user['role'];
                 
-                setFlash('success', 'Welcome back, ' . $user['full_name'] . '!');
+                setFlash('success', 'Welcome back, ' . $user['name'] . '!');
                 
                 // Redirect to intended page or dashboard
                 $redirect_to = $_SESSION['redirect_after_login'] ?? SITE_URL . '/index.php';

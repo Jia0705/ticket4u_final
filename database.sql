@@ -10,7 +10,7 @@ CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    full_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     role ENUM('user', 'admin') DEFAULT 'user',
     status ENUM('active', 'inactive', 'banned') DEFAULT 'active',
@@ -179,11 +179,11 @@ INSERT INTO categories (name, slug, icon, description, display_order) VALUES
 ('Exhibitions', 'exhibitions', 'fa-building', 'Trade shows and exhibitions', 8);
 
 -- Insert default admin user (password: admin123)
-INSERT INTO users (email, password, full_name, role, status) VALUES
+INSERT INTO users (email, password, name, role, status) VALUES
 ('admin@ticket4u.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'System Administrator', 'admin', 'active');
 
 -- Insert sample user (password: user123)
-INSERT INTO users (email, password, full_name, phone, role) VALUES
+INSERT INTO users (email, password, name, phone, role) VALUES
 ('john@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'John Doe', '0123456789', 'user');
 
 -- Insert sample events

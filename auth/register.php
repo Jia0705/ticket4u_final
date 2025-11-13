@@ -11,14 +11,14 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $full_name = clean($_POST['full_name'] ?? '');
+    $name = clean($_POST['name'] ?? '');
     $email = clean($_POST['email'] ?? '');
     $phone = clean($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     
-    // Validation
-    if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password)) {
+    // Validate
+    if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
         $error = 'Please fill in all required fields';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address';
@@ -39,17 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Hash password and insert user
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             
-            $insert_query = "INSERT INTO users (email, password, full_name, phone, role, status) 
-                            VALUES (?, ?, ?, ?, 'user', 'active')";
-            $stmt = $conn->prepare($insert_query);
-            $stmt->bind_param('ssss', $email, $hashed_password, $full_name, $phone);
             
-            if ($stmt->execute()) {
+            $insert_query = "INSERT INTO users (email, password, name, phone, role, status) 
+                           VALUES (?, ?, ?, ?, 'user', 'active')";
+            $stmt = $conn->prepare($insert_query);
+            $stmt->bind_param('ssss', $email, $hashed_password, $name, $phone);            if ($stmt->execute()) {
                 // Auto login
                 $user_id = $conn->insert_id;
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['user_email'] = $email;
-                $_SESSION['user_name'] = $full_name;
+                $_SESSION['user_name'] = $name;
                 $_SESSION['user_role'] = 'user';
                 
                 setFlash('success', 'Welcome to Ticket4U! Your account has been created successfully.');
@@ -181,9 +180,9 @@ require_once __DIR__ . '/../includes/header.php';
             <form method="POST" action="" id="registerForm">
                 <div class="form-group">
                     <label class="form-label">Full Name *</label>
-                    <input type="text" name="full_name" class="form-control" required 
+                    <input type="text" name="name" class="form-control" required 
                            placeholder="John Doe"
-                           value="<?php echo isset($_POST['full_name']) ? htmlspecialchars($_POST['full_name']) : ''; ?>">
+                           value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
                 </div>
 
                 <div class="form-group">

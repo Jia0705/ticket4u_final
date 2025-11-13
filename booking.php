@@ -336,13 +336,13 @@ require_once __DIR__ . '/includes/header.php';
                         <div class="form-group">
                             <label class="form-label">Full Name *</label>
                             <input type="text" name="customer_name" class="form-control" required 
-                                   value="<?php echo htmlspecialchars(getCurrentUser()['full_name']); ?>">
+                                   value="<?php echo htmlspecialchars(getCurrentUser()['name'] ?? ''); ?>">
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Email Address *</label>
                             <input type="email" name="customer_email" class="form-control" required 
-                                   value="<?php echo htmlspecialchars(getCurrentUser()['email']); ?>">
+                                   value="<?php echo htmlspecialchars(getCurrentUser()['email'] ?? ''); ?>">
                             <small class="text-muted">Your tickets will be sent to this email</small>
                         </div>
 
