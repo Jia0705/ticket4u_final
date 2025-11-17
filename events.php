@@ -69,17 +69,23 @@ $stmt->execute();
 $total_events = $stmt->get_result()->fetch_assoc()['total'];
 $total_pages = ceil($total_events / EVENTS_PER_PAGE);
 
-// Fetch events
-$events_query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon
+// Get current user ID for wishlist check
+$current_user_id = isLoggedIn() ? getCurrentUser()['id'] : 0;
+
+// Fetch events with wishlist status
+$events_query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon,
+                 (SELECT COUNT(*) FROM wishlists WHERE event_id = e.id AND user_id = ?) as in_wishlist
                  FROM events e
                  JOIN categories c ON e.category_id = c.id
                  WHERE $where_clause
                  ORDER BY $order_by
                  LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($events_query);
+// Add user_id as first parameter
+array_unshift($params, $current_user_id);
 $params[] = EVENTS_PER_PAGE;
 $params[] = $offset;
-$stmt->bind_param(str_repeat('s', count($params) - 2) . 'ii', ...$params);
+$stmt->bind_param('i' . str_repeat('s', count($params) - 3) . 'ii', ...$params);
 $stmt->execute();
 $events = $stmt->get_result();
 
@@ -408,8 +414,8 @@ require_once __DIR__ . '/includes/header.php';
                                          alt="<?php echo htmlspecialchars($event['title']); ?>"
                                          onerror="this.src='<?php echo SITE_URL; ?>/assets/images/placeholder-event.jpg'">
                                 </a>
-                                <button class="wishlist-btn" data-event-id="<?php echo $event['id']; ?>">
-                                    <i class="far fa-heart"></i>
+                                <button class="wishlist-btn<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" data-event-id="<?php echo $event['id']; ?>">
+                                    <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
                                 </button>
                                 <?php if ($event['featured']): ?>
                                     <div class="event-badge">Featured</div>

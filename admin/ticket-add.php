@@ -38,12 +38,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($name) || $price < 0 || $available < 0) {
         $error = 'Please fill in all required fields';
     } else {
-        $insert = "INSERT INTO ticket_types (event_id, name, price, available, description) 
-                   VALUES (?, ?, ?, ?, ?)";
+        $insert = "INSERT INTO ticket_types (event_id, name, price, quantity, available, description) 
+                   VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insert);
-        $stmt->bind_param('isdis', $event_id, $name, $price, $available, $description);
+        $stmt->bind_param('isdiis', $event_id, $name, $price, $available, $available, $description);
         
         if ($stmt->execute()) {
+            // Update event min/max prices
+            $update_prices = "UPDATE events SET 
+                min_price = (SELECT MIN(price) FROM ticket_types WHERE event_id = ?),
+                max_price = (SELECT MAX(price) FROM ticket_types WHERE event_id = ?),
+                total_seats = (SELECT SUM(quantity) FROM ticket_types WHERE event_id = ?),
+                available_seats = (SELECT SUM(available) FROM ticket_types WHERE event_id = ?)
+                WHERE id = ?";
+            $price_stmt = $conn->prepare($update_prices);
+            $price_stmt->bind_param('iiiii', $event_id, $event_id, $event_id, $event_id, $event_id);
+            $price_stmt->execute();
+            
             setFlash('success', 'Ticket type added successfully');
             redirect(SITE_URL . '/admin/event-edit.php?id=' . $event_id);
         } else {

@@ -110,8 +110,8 @@
         $(this).parent('.form-group').removeClass('focused');
     });
 
-    // Event Card Wishlist Toggle
-    $(document).on('click', '.wishlist-btn', function(e) {
+    // Event Card Wishlist Toggle (only for buttons with data-event-id, not onclick handlers)
+    $(document).on('click', '.wishlist-btn[data-event-id]', function(e) {
         e.preventDefault();
         const $btn = $(this);
         const eventId = $btn.data('event-id');
@@ -124,6 +124,16 @@
                 if (response.success) {
                     $btn.toggleClass('active');
                     $btn.find('i').toggleClass('far fas');
+                    
+                    // Update button text if it has a span with class wishlist-text
+                    const $textSpan = $btn.find('.wishlist-text');
+                    if ($textSpan.length > 0) {
+                        if (response.action === 'added') {
+                            $textSpan.text('Remove from Wishlist');
+                        } else {
+                            $textSpan.text('Add to Wishlist');
+                        }
+                    }
                     
                     // Show notification
                     showNotification(response.message, 'success');
@@ -326,7 +336,13 @@
 })(jQuery);
 
 // Wishlist toggle function (global scope for onclick handlers)
-function toggleWishlist(eventId, button) {
+function toggleWishlist(eventId, button, event) {
+    // Prevent event bubbling to avoid triggering jQuery handler
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    
     // Check if user is logged in (button will only show if logged in on some pages)
     fetch(window.location.origin + '/ticket4u_final/toggle-wishlist.php', {
         method: 'POST',
@@ -336,19 +352,12 @@ function toggleWishlist(eventId, button) {
         credentials: 'same-origin', // Include cookies for session
         body: 'event_id=' + eventId
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(data => {
-                throw new Error(data.message || 'Request failed');
-            });
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Toggle button state
-            const btn = button || document.querySelector(`[onclick*="${eventId}"]`);
-            if (btn) {
+            // Update ALL wishlist buttons for this event on the page
+            const allButtons = document.querySelectorAll(`[onclick*="toggleWishlist(${eventId}"]`);
+            allButtons.forEach(btn => {
                 const icon = btn.querySelector('i');
                 if (data.action === 'added') {
                     btn.classList.add('active');
@@ -361,17 +370,18 @@ function toggleWishlist(eventId, button) {
                     icon.classList.add('far');
                     btn.setAttribute('title', 'Add to wishlist');
                 }
-            }
+            });
             
             // Show notification
             showNotification(data.message, 'success');
         } else {
+            // Server returned success: false (like not logged in)
             showNotification(data.message, 'error');
         }
     })
     .catch(error => {
         console.error('Wishlist Error:', error);
-        showNotification(error.message || 'An error occurred. Please try again.', 'error');
+        showNotification('An error occurred. Please try again.', 'error');
     });
 }
 

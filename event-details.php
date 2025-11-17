@@ -8,13 +8,17 @@ if (empty($slug)) {
     redirect(SITE_URL . '/events.php');
 }
 
-// Fetch event details
-$query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon
+// Get current user ID for wishlist check
+$current_user_id = isLoggedIn() ? getCurrentUser()['id'] : 0;
+
+// Fetch event details with wishlist status
+$query = "SELECT e.*, c.name as category_name, c.slug as category_slug, c.icon as category_icon,
+          (SELECT COUNT(*) FROM wishlists WHERE event_id = e.id AND user_id = ?) as in_wishlist
           FROM events e
           JOIN categories c ON e.category_id = c.id
           WHERE e.slug = ? AND e.status = 'published'";
 $stmt = $conn->prepare($query);
-$stmt->bind_param('s', $slug);
+$stmt->bind_param('is', $current_user_id, $slug);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -255,6 +259,18 @@ require_once __DIR__ . '/includes/header.php';
     color: var(--success);
 }
 
+/* Override wishlist-btn absolute positioning for booking sidebar */
+.booking-sidebar .wishlist-btn {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: var(--radius-md) !important;
+    top: auto !important;
+    left: auto !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+}
+
 .related-events {
     margin-top: 3rem;
 }
@@ -448,9 +464,9 @@ require_once __DIR__ . '/includes/header.php';
                             Book Now
                         </button>
 
-                        <button type="button" class="wishlist-btn btn btn-outline" style="width: 100%; margin-top: 0.5rem;" data-event-id="<?php echo $event['id']; ?>">
-                            <i class="far fa-heart"></i>
-                            Add to Wishlist
+                        <button type="button" class="wishlist-btn btn btn-outline<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" style="width: 100%; margin-top: 0.5rem;" data-event-id="<?php echo $event['id']; ?>">
+                            <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
+                            <span class="wishlist-text"><?php echo $event['in_wishlist'] > 0 ? 'Remove from Wishlist' : 'Add to Wishlist'; ?></span>
                         </button>
                     <?php else: ?>
                         <p class="text-center text-muted">No tickets available at the moment</p>

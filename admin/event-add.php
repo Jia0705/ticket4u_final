@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-                $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+                $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 
                 if (in_array($file_ext, $allowed_ext)) {
                     $new_filename = 'event_' . time() . '_' . uniqid() . '.' . $file_ext;

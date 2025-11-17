@@ -1,5 +1,5 @@
 -- Ticket4U Database Schema
--- Professional Event Ticketing System
+-- Event Ticketing System
 
 DROP DATABASE IF EXISTS ticket4u;
 CREATE DATABASE ticket4u CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -138,23 +138,6 @@ CREATE TABLE booking_items (
     INDEX idx_ticket_number (ticket_number)
 ) ENGINE=InnoDB;
 
--- Reviews table
-CREATE TABLE reviews (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    event_id INT NOT NULL,
-    user_id INT NOT NULL,
-    booking_id INT NOT NULL,
-    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_booking_review (booking_id),
-    INDEX idx_event (event_id)
-) ENGINE=InnoDB;
-
 -- Wishlists table
 CREATE TABLE wishlists (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -188,22 +171,40 @@ INSERT INTO users (email, password, name, phone, role) VALUES
 
 -- Insert sample events
 INSERT INTO events (category_id, title, slug, description, featured_image, venue_name, venue_address, venue_city, event_date, event_time, organizer_name, featured, total_seats, available_seats, min_price, max_price) VALUES
-(1, 'Rock Nation 2026 - Malaysia Tour', 'rock-nation-2026', 'Experience the biggest rock festival in Southeast Asia featuring international and local rock bands. A night filled with electrifying performances and amazing energy!', 'rock-concert.jpg', 'Stadium Merdeka', 'Jalan Stadium, Kuala Lumpur', 'Kuala Lumpur', '2026-03-15', '19:00:00', 'Rock Events Malaysia', TRUE, 5000, 5000, 150.00, 500.00),
-(1, 'Jazz Under The Stars', 'jazz-under-stars', 'An intimate evening of smooth jazz performances by renowned Malaysian and international jazz artists.', 'jazz-concert.jpg', 'Istana Budaya', 'Jalan Tun Razak, Kuala Lumpur', 'Kuala Lumpur', '2026-02-20', '20:00:00', 'Jazz Society Malaysia', TRUE, 800, 800, 80.00, 250.00),
-(2, 'Malaysia Football League Finals 2026', 'football-finals-2026', 'Witness the exciting finals of Malaysia Football League. Support your favorite team!', 'football.jpg', 'Bukit Jalil National Stadium', 'Bukit Jalil, Kuala Lumpur', 'Kuala Lumpur', '2026-04-10', '20:45:00', 'Football Association Malaysia', TRUE, 87000, 87000, 50.00, 300.00),
-(3, 'Shakespeare In The Park: Romeo & Juliet', 'shakespeare-romeo-juliet', 'A modern adaptation of the classic love story performed under the stars.', 'theatre.jpg', 'Taman Botani Perdana', 'Jalan Kebun Bunga, Kuala Lumpur', 'Kuala Lumpur', '2026-03-05', '19:30:00', 'KL Theatre Society', FALSE, 500, 500, 60.00, 120.00),
-(4, 'Rainforest Music Festival 2026', 'rainforest-music-2026', 'Three days of world music, cultural performances, and workshops set in the stunning Sarawak Cultural Village.', 'festival.jpg', 'Sarawak Cultural Village', 'Pantai Damai, Santubong', 'Kuching', '2026-07-18', '15:00:00', 'Sarawak Tourism Board', TRUE, 3000, 3000, 200.00, 600.00),
-(5, 'Comedy Night Live with Harith Iskander', 'comedy-harith-2026', 'Laugh out loud with Malaysia\'s King of Comedy in an evening of hilarious stand-up.', 'comedy.jpg', 'Pavilion Theatre', 'Pavilion KL, Jalan Bukit Bintang', 'Kuala Lumpur', '2026-02-28', '20:00:00', 'Comedy Central Asia', FALSE, 600, 600, 88.00, 188.00);
+(1, 'Coldplay: Music Of The Spheres World Tour', 'coldplay-malaysia-2026', 'Experience the magic of Coldplay live in Malaysia! The British rock band brings their spectacular Music Of The Spheres World Tour featuring hits like Yellow, Fix You, Viva La Vida, and more. A night filled with stunning visuals, eco-friendly production, and unforgettable music.', 'coldplay.jpg', 'Bukit Jalil National Stadium', 'Bukit Jalil, Kuala Lumpur', 'Kuala Lumpur', '2026-03-22', '20:00:00', 'Live Nation Malaysia', TRUE, 87000, 87000, 298.00, 888.00),
+(1, 'Justin Bieber: Justice World Tour Malaysia', 'justin-bieber-2026', 'The global pop sensation Justin Bieber returns to Malaysia! Sing along to Peaches, Stay, Love Yourself, Sorry, and all your favorite hits. Don\'t miss this incredible once-in-a-lifetime performance!', 'justin-bieber.jpg', 'Axiata Arena', 'Jalan 3/155B, Bukit Jalil', 'Kuala Lumpur', '2026-04-15', '20:00:00', 'PR Worldwide', TRUE, 12000, 12000, 388.00, 1288.00),
+(1, 'Maroon 5 Live in Kuala Lumpur', 'maroon-5-malaysia', 'Adam Levine and Maroon 5 are coming to Malaysia! Get ready for an amazing night with hits like Sugar, Moves Like Jagger, Girls Like You, Memories, and more. Their signature pop-rock sound will light up the night!', 'maroon5.jpg', 'Merdeka Stadium', 'Jalan Stadium, Kuala Lumpur', 'Kuala Lumpur', '2026-05-10', '20:00:00', 'IME Malaysia', TRUE, 45000, 45000, 268.00, 788.00),
+(1, 'Keshi: HELL/HEAVEN Tour Malaysia', 'keshi-malaysia-2026', 'Vietnamese-American singer-songwriter Keshi brings his intimate and emotional performance to Malaysia. Experience live renditions of LIMBO, 2 soon, drunk, like i need u, and more from his soulful R&B catalog.', 'keshi.jpg', 'Zepp Kuala Lumpur', 'Jalan Tunku Abdul Rahman, KL', 'Kuala Lumpur', '2026-02-28', '20:00:00', 'Unusual Entertainment', TRUE, 3500, 3500, 188.00, 488.00),
+(1, 'Ed Sheeran: Mathematics Tour 2026', 'ed-sheeran-malaysia', 'Ed Sheeran returns to Malaysia with his Mathematics Tour! The Grammy-winning artist performs Shape of You, Perfect, Thinking Out Loud, Bad Habits, and more. Just him, his guitar, and his iconic loop pedal.', 'ed-sheeran.jpg', 'Bukit Jalil National Stadium', 'Bukit Jalil, Kuala Lumpur', 'Kuala Lumpur', '2026-06-20', '20:00:00', 'AEG Presents Asia', TRUE, 87000, 87000, 328.00, 988.00),
+(1, 'The Weeknd: After Hours til Dawn Tour', 'the-weeknd-malaysia', 'Abel Tesfaye aka The Weeknd brings his cinematic After Hours til Dawn stadium tour to Malaysia! Experience Blinding Lights, Starboy, Save Your Tears, and The Hills with jaw-dropping production and visuals.', 'the-weeknd.jpg', 'Bukit Jalil National Stadium', 'Bukit Jalil, Kuala Lumpur', 'Kuala Lumpur', '2026-07-18', '20:00:00', 'Live Nation Asia', TRUE, 87000, 87000, 358.00, 1088.00),
+(1, 'Bruno Mars: An Evening with Silk Sonic', 'bruno-mars-malaysia', 'Bruno Mars is bringing the party to Malaysia! Get ready for non-stop energy with 24K Magic, Uptown Funk, Just The Way You Are, Locked Out of Heaven, and more. The ultimate feel-good concert experience!', 'bruno-mars.jpg', 'Axiata Arena', 'Jalan 3/155B, Bukit Jalil', 'Kuala Lumpur', '2026-08-15', '20:00:00', 'AEG Presents', TRUE, 12000, 12000, 398.00, 1188.00);
 
 -- Insert sample ticket types
 INSERT INTO ticket_types (event_id, name, description, price, quantity, available, display_order) VALUES
-(1, 'VIP Standing', 'Front row standing area with exclusive VIP lounge access', 500.00, 500, 500, 1),
-(1, 'Premium Standing', 'Premium standing area with great view', 250.00, 1500, 1500, 2),
-(1, 'General Admission', 'General standing area', 150.00, 3000, 3000, 3),
-(2, 'VIP Seating', 'Premium seating with complimentary drinks', 250.00, 100, 100, 1),
-(2, 'Category A', 'Excellent view seating', 150.00, 300, 300, 2),
-(2, 'Category B', 'Good view seating', 80.00, 400, 400, 3),
-(3, 'VIP Box', 'Private box for 4 people', 300.00, 200, 200, 1),
-(3, 'Category 1', 'Best view seats', 150.00, 5000, 5000, 2),
-(3, 'Category 2', 'Good seats', 100.00, 20000, 20000, 3),
-(3, 'Category 3', 'Standard seats', 50.00, 61800, 61800, 4);
+(1, 'A Reserve', 'Best view seats - front sections with perfect stage view', 888.00, 5000, 5000, 1),
+(1, 'B Reserve', 'Great view seats - excellent sightlines', 588.00, 15000, 15000, 2),
+(1, 'C Reserve', 'Good view seats - standard stadium seating', 398.00, 30000, 30000, 3),
+(1, 'D Reserve', 'Economy seats - upper level with full stage view', 298.00, 37000, 37000, 4),
+(2, 'VIP Package', 'Premium seating, exclusive merchandise, and meet & greet opportunity', 1288.00, 500, 500, 1),
+(2, 'Rock Zone', 'Standing area close to stage - best energy!', 788.00, 3000, 3000, 2),
+(2, 'Platinum Seating', 'Premium seated section with excellent view', 588.00, 2500, 2500, 3),
+(2, 'Gold Seating', 'Great seated section', 388.00, 6000, 6000, 4),
+(3, 'Rock Pit', 'Standing area in front of stage - closest to the band!', 788.00, 5000, 5000, 1),
+(3, 'Premium Seating', 'Best seated sections with perfect view', 488.00, 10000, 10000, 2),
+(3, 'Standard Seating', 'Good seated sections', 368.00, 15000, 15000, 3),
+(3, 'Gallery', 'Upper level seating - full stage view', 268.00, 15000, 15000, 4),
+(4, 'VIP Experience', 'Priority entry, exclusive merch, best viewing area', 488.00, 300, 300, 1),
+(4, 'Standing GA', 'General admission standing - close to stage', 288.00, 1700, 1700, 2),
+(4, 'Seated', 'Seated section with good view', 188.00, 1500, 1500, 3),
+(5, 'Diamond', 'Closest to stage - ultimate experience', 988.00, 5000, 5000, 1),
+(5, 'Platinum', 'Premium lower bowl seating', 688.00, 15000, 15000, 2),
+(5, 'Gold', 'Great mid-level seating', 488.00, 30000, 30000, 3),
+(5, 'Silver', 'Upper level with full view', 328.00, 37000, 37000, 4),
+(6, 'VIP Floor', 'Floor standing closest to stage with VIP entry', 1088.00, 5000, 5000, 1),
+(6, 'Floor Standing', 'General floor standing area', 688.00, 15000, 15000, 2),
+(6, 'Lower Bowl', 'Seated lower bowl sections', 488.00, 30000, 30000, 3),
+(6, 'Upper Bowl', 'Seated upper sections', 358.00, 37000, 37000, 4),
+(7, 'VIP Package', 'Floor seats, merchandise, VIP lounge access', 1188.00, 1000, 1000, 1),
+(7, 'Floor A', 'Premium floor seating - front sections', 788.00, 2500, 2500, 2),
+(7, 'Floor B', 'Floor seating - mid sections', 588.00, 2500, 2500, 3),
+(7, 'Lower Tier', 'Stadium lower tier seating', 398.00, 6000, 6000, 4);

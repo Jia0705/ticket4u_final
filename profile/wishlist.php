@@ -87,7 +87,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 <?php echo htmlspecialchars($event['category_name']); ?>
                             </span>
                             <button class="wishlist-btn active" 
-                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this)"
+                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this, event)"
                                     title="Remove from wishlist">
                                 <i class="fas fa-heart"></i>
                             </button>

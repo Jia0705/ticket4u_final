@@ -32,6 +32,17 @@ $delete = $conn->prepare("DELETE FROM ticket_types WHERE id = ?");
 $delete->bind_param('i', $ticket_id);
 
 if ($delete->execute()) {
+    // Update event min/max prices after deletion
+    $update_prices = "UPDATE events SET 
+        min_price = (SELECT MIN(price) FROM ticket_types WHERE event_id = ?),
+        max_price = (SELECT MAX(price) FROM ticket_types WHERE event_id = ?),
+        total_seats = (SELECT COALESCE(SUM(quantity), 0) FROM ticket_types WHERE event_id = ?),
+        available_seats = (SELECT COALESCE(SUM(available), 0) FROM ticket_types WHERE event_id = ?)
+        WHERE id = ?";
+    $price_stmt = $conn->prepare($update_prices);
+    $price_stmt->bind_param('iiiii', $event_id, $event_id, $event_id, $event_id, $event_id);
+    $price_stmt->execute();
+    
     setFlash('success', 'Ticket type deleted successfully');
 } else {
     setFlash('error', 'Failed to delete ticket type');

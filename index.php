@@ -452,7 +452,7 @@ $stats = $stats_result->fetch_assoc();
                                      onerror="this.src='<?php echo SITE_URL; ?>/assets/images/placeholder-event.jpg'">
                             </a>
                             <button class="wishlist-btn<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" 
-                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this)"
+                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this, event)"
                                     title="<?php echo $event['in_wishlist'] > 0 ? 'Remove from wishlist' : 'Add to wishlist'; ?>">
                                 <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
                             </button>
@@ -527,7 +527,7 @@ $stats = $stats_result->fetch_assoc();
                                      onerror="this.src='<?php echo SITE_URL; ?>/assets/images/placeholder-event.jpg'">
                             </a>
                             <button class="wishlist-btn<?php echo $event['in_wishlist'] > 0 ? ' active' : ''; ?>" 
-                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this)"
+                                    onclick="toggleWishlist(<?php echo $event['id']; ?>, this, event)"
                                     title="<?php echo $event['in_wishlist'] > 0 ? 'Remove from wishlist' : 'Add to wishlist'; ?>">
                                 <i class="fa<?php echo $event['in_wishlist'] > 0 ? 's' : 'r'; ?> fa-heart"></i>
                             </button>
