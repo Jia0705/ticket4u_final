@@ -74,10 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Insert booking items
             foreach ($tickets as $ticket) {
-                $insert_item = "INSERT INTO booking_items (booking_id, ticket_type_id, quantity, unit_price, subtotal) 
-                               VALUES (?, ?, ?, ?, ?)";
+                // Generate unique ticket number for each ticket
+                $ticket_number = 'TKT-' . $booking_reference . '-' . strtoupper(substr(uniqid(), -4));
+                
+                $insert_item = "INSERT INTO booking_items (booking_id, ticket_type_id, ticket_number, quantity, unit_price, subtotal) 
+                               VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = $conn->prepare($insert_item);
-                $stmt->bind_param('iiidd', $booking_id, $ticket['id'], $ticket['quantity'], $ticket['price'], $ticket['subtotal']);
+                $stmt->bind_param('iisidd', $booking_id, $ticket['id'], $ticket_number, $ticket['quantity'], $ticket['price'], $ticket['subtotal']);
                 $stmt->execute();
                 
                 // Update ticket availability

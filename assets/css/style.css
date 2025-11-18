@@ -911,6 +911,7 @@ textarea.form-control {
     }
     
     .navbar-content {
+        justify-content: space-between;
         gap: var(--spacing-md);
     }
     
@@ -918,13 +919,27 @@ textarea.form-control {
         display: none;
     }
     
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+    
     .user-menu .btn {
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
     }
     
-    .user-btn span {
+    .user-menu {
         display: none;
+    }
+    
+    .mobile-menu-toggle {
+        padding: 0.5rem;
+    }
+    
+    .logo {
+        font-size: 1.25rem;
     }
     
     .footer-grid {

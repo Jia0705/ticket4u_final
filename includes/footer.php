@@ -15,10 +15,10 @@
                             Your premier event ticketing platform in Malaysia. Discover and book tickets for concerts, sports, theatre, festivals, and more!
                         </p>
                         <div class="social-links">
-                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                            <a href="javascript:void(0)" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                            <a href="javascript:void(0)" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="javascript:void(0)" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="javascript:void(0)" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
 

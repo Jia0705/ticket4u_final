@@ -161,12 +161,28 @@ require_once __DIR__ . '/../includes/header.php';
     .form-row {
         grid-template-columns: 1fr;
     }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .page-header-actions {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .page-header-actions h1 {
+        font-size: 1.5rem;
+    }
 }
 </style>
 
 <main class="main-content">
     <div class="admin-container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <div class="page-header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h1 style="font-size: 2rem; font-weight: 800;"><i class="fas fa-plus-circle"></i> Add New Event</h1>
             <a href="<?php echo SITE_URL; ?>/admin/events.php" class="btn btn-outline">
                 <i class="fas fa-arrow-left"></i> Back to Events

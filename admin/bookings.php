@@ -93,7 +93,12 @@ require_once __DIR__ . '/../includes/header.php';
     background: white;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    overflow: hidden;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
 }
 
 .table-header {
@@ -168,6 +173,15 @@ tr:hover {
     th, td {
         padding: 0.75rem 0.5rem;
     }
+    
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table-responsive table {
+        min-width: 900px;
+    }
 }
 </style>
 
@@ -214,6 +228,7 @@ tr:hover {
                 <span><?php echo $bookings->num_rows; ?> bookings</span>
             </div>
 
+            <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
@@ -260,6 +275,7 @@ tr:hover {
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </main>

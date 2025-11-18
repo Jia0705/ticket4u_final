@@ -318,12 +318,10 @@
 
     function displaySearchResults(results) {
         // Implement search results display
-        console.log('Search results:', results);
     }
 
     // Initialize page
     $(document).ready(function() {
-        console.log('Ticket4U initialized');
         
         // Add animation classes to elements
         $('.fade-in').each(function(i) {

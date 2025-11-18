@@ -186,6 +186,26 @@ require_once __DIR__ . '/includes/header.php';
     flex: 1;
 }
 
+.profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.profile-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.profile-header p {
+    opacity: 0.95;
+    font-size: 1.1rem;
+}
+
 .events-toolbar {
     display: flex;
     justify-content: space-between;
@@ -286,35 +306,76 @@ require_once __DIR__ . '/includes/header.php';
     .page-title {
         font-size: 1.75rem;
     }
+    
+    .profile-header {
+        padding: 2rem 1.5rem;
+    }
+    
+    .profile-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .profile-header p {
+        font-size: 0.95rem;
+    }
+    
+    .events-toolbar {
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .events-toolbar form {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .events-toolbar form label {
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+    
+    .results-count {
+        font-size: 0.9rem;
+        padding: 0 0.5rem;
+    }
+    
+    .sort-select {
+        font-size: 0.875rem;
+        padding: 0.4rem 0.75rem;
+        flex: 1;
+        min-width: 150px;
+    }
 }
 </style>
 
-<div class="page-header">
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="<?php echo SITE_URL; ?>"><i class="fas fa-home"></i></a>
-            <span>/</span>
-            <span>Events</span>
-            <?php if ($category): ?>
-                <span>/</span>
-                <span><?php echo ucfirst($category); ?></span>
-            <?php endif; ?>
-        </div>
-        <h1 class="page-title">
+<div class="container events-page">
+    <div class="profile-header">
+        <h1>
+            <i class="fas fa-calendar-alt"></i>
             <?php 
             if ($category) {
                 echo ucfirst(str_replace('-', ' ', $category));
             } elseif ($search) {
-                echo "Search Results for '$search'";
+                echo "Search Results";
             } else {
                 echo "All Events";
             }
             ?>
         </h1>
+        <p>
+            <?php 
+            if ($search) {
+                echo "Showing results for '" . htmlspecialchars($search) . "'";
+            } elseif ($category) {
+                echo "Browse " . strtolower(str_replace('-', ' ', $category)) . " happening near you";
+            } else {
+                echo "Discover amazing events and book your tickets today";
+            }
+            ?>
+        </p>
     </div>
-</div>
-
-<div class="container events-page">
     <div class="events-container">
         <!-- Filters Sidebar -->
         <aside class="filters-sidebar">
@@ -367,8 +428,8 @@ require_once __DIR__ . '/includes/header.php';
                         Date Range
                     </h3>
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <input type="date" name="date_from" class="form-control" value="<?php echo $date_from; ?>">
-                        <input type="date" name="date_to" class="form-control" value="<?php echo $date_to; ?>">
+                        <input type="date" name="date_from" class="form-control" value="<?php echo $date_from; ?>" min="<?php echo date('Y-m-d'); ?>">
+                        <input type="date" name="date_to" class="form-control" value="<?php echo $date_to; ?>" min="<?php echo date('Y-m-d'); ?>">
                         <button type="submit" class="btn btn-primary btn-sm">Apply</button>
                     </div>
                 </div>

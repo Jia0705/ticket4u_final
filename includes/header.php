@@ -186,7 +186,7 @@ $flash = getFlash();
                     <div class="mobile-user-info">
                         <img src="<?php echo SITE_URL; ?>/uploads/profiles/<?php echo htmlspecialchars($current_user['profile_image']); ?>" alt="Profile" class="user-avatar">
                         <div>
-                            <strong><?php echo htmlspecialchars($current_user['full_name']); ?></strong>
+                            <strong><?php echo htmlspecialchars($current_user['name']); ?></strong>
                             <small><?php echo htmlspecialchars($current_user['email']); ?></small>
                         </div>
                     </div>
@@ -218,7 +218,7 @@ $flash = getFlash();
                         <?php if (isAdmin()): ?>
                             <a href="<?php echo SITE_URL; ?>/admin/dashboard.php"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</a>
                         <?php endif; ?>
-                        <a href="<?php echo SITE_URL; ?>/profile/dashboard.php"><i class="fas fa-ticket-alt"></i> My Bookings</a>
+                        <a href="<?php echo SITE_URL; ?>/profile/bookings.php"><i class="fas fa-ticket-alt"></i> My Bookings</a>
                         <a href="<?php echo SITE_URL; ?>/profile/profile.php"><i class="fas fa-user"></i> Profile</a>
                         <a href="<?php echo SITE_URL; ?>/profile/wishlist.php"><i class="fas fa-heart"></i> Wishlist</a>
                         <a href="<?php echo SITE_URL; ?>/auth/logout.php" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
